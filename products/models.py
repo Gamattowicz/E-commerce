@@ -20,8 +20,14 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         creating = self._state.adding
+        image_changed = False
 
-        if self.image and not self.thumbnail:
+        if not creating:
+            orig = Product.objects.get(pk=self.pk)
+            if orig.image != self.image:
+                image_changed = True
+
+        if self.image and (not self.thumbnail or image_changed):
             try:
                 img = Image.open(self.image)
 
@@ -36,9 +42,6 @@ class Product(models.Model):
                     thumb_file_name = f"thumb_{os.path.basename(self.image.name)}"
                     thumb_file_path = thumb_file_name
 
-                    if self.thumbnail:
-                        storage.delete(self.thumbnail.path)
-
                     self.thumbnail.save(
                         thumb_file_path, ContentFile(thumb_io.getvalue()), save=False
                     )
@@ -49,7 +52,8 @@ class Product(models.Model):
         if creating:
             super(Product, self).save(*args, **kwargs)
         else:
-            super(Product, self).save(update_fields=["thumbnail"])
+            update_fields = ["thumbnail"] if image_changed else None
+            super(Product, self).save(update_fields=update_fields)
 
     def __str__(self):
         return self.name

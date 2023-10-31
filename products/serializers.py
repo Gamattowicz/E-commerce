@@ -20,7 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "image",
             "thumbnail",
         ]
-        read_only_fields = ["thumbnail"]
+        read_only_fields = ["thumbnail", "id"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -36,3 +36,29 @@ class ProductSerializer(serializers.ModelSerializer):
         category, _ = Category.objects.get_or_create(name=category_name)
         product = Product.objects.create(category=category, **validated_data)
         return product
+
+    def update(self, instance, validated_data):
+        print("Updating with data:", validated_data)
+        category_name = validated_data.pop("category")["name"]
+        category, _ = Category.objects.get_or_create(name=category_name)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.category = category
+        instance.save()
+
+        return instance
+
+    def partial_update(self, instance, validated_data):
+        print("Updating with data:", validated_data)
+        category_name = validated_data.pop("category")["name"]
+        category, _ = Category.objects.get_or_create(name=category_name)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.category = category
+        instance.save()
+
+        return instance
