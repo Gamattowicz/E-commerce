@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icons {
+  font-size: 20px;
+  color: hsl(var(--p))
+}
+
+.icons:hover {
+  color: hsl(var(--a));
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5)
+}
