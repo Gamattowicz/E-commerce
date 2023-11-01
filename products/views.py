@@ -26,7 +26,7 @@ class ProductViewSet(ModelViewSet):
     pagination_class = ProductPagination
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = ProductFilter
-    ordering_fields = ["name", "category", "price"]
+    ordering_fields = ["name", "-name", "category", "-category", "price", "-price"]
     permission_classes = [IsSeller]
     parser_classes = (MultiPartParser, FormParser)
 

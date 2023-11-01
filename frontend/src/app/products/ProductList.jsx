@@ -11,7 +11,8 @@ export default function ProductList() {
   const [productNumbers, setProductNumbers] = useState(0);
   const [page, setPage] = useState(1);
   const [productOnPage, setProductOnPage] = useState(3);
-  const [sortOrder, setSortOrder] = useState("");
+  const [sortField, setSortField] = useState("");
+  const [sortDirection, setSortDirection] = useState("asc");
   const [filters, setFilters] = useState({
     name: "",
     category: "",
@@ -23,8 +24,9 @@ export default function ProductList() {
   async function fetchProduct() {
     try {
       let endpoint = `http://127.0.0.1:8000/products/?page=${page}&page_size=${productOnPage}`;
-      if (sortOrder) {
-        endpoint += `&ordering=${sortOrder}`;
+      if (sortField) {
+        const prefix = sortDirection === "desc" ? "-" : "";
+        endpoint += `&ordering=${prefix}${sortField}`;
       }
       Object.entries(filters).forEach(([key, value]) => {
         if (value) {
@@ -55,7 +57,7 @@ export default function ProductList() {
 
   useEffect(() => {
     fetchProduct();
-  }, [page, sortOrder, filters]);
+  }, [page, sortField, sortDirection, filters]);
 
   return (
     <React.Fragment>
@@ -73,21 +75,30 @@ export default function ProductList() {
 
       <div className="flex justify-center items-center mb-4 flex-wrap">
         <select
-          className="select select-primary w-full max-w-xs m-2"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
+          className="select select-info w-1/8 max-w-xs m-1"
+          value={sortField}
+          onChange={(e) => setSortField(e.target.value)}
         >
-          <option disabled selected value="">
+          <option value="" disabled selected>
             Sort by...
           </option>
           <option value="name">Name</option>
           <option value="category">Category</option>
           <option value="price">Price</option>
         </select>
+
+        <select
+          className="select select-info w-1/8 max-w-xs m-1"
+          value={sortDirection}
+          onChange={(e) => setSortDirection(e.target.value)}
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
         <input
           type="text"
           placeholder="Filter by name"
-          className="m-2"
+          className="input input-bordered input-primary w-1/8 max-w-xs m-1"
           value={filters.name}
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, name: e.target.value }))
@@ -96,7 +107,7 @@ export default function ProductList() {
         <input
           type="text"
           placeholder="Filter by category"
-          className="m-2"
+          className="input input-bordered input-primary w-1/8 max-w-xs m-1"
           value={filters.category}
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, category: e.target.value }))
@@ -105,7 +116,7 @@ export default function ProductList() {
         <input
           type="text"
           placeholder="Filter by description"
-          className="m-2"
+          className="input input-bordered input-primary w-1/8 max-w-xs m-1"
           value={filters.description}
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, description: e.target.value }))
@@ -114,7 +125,7 @@ export default function ProductList() {
         <input
           type="text"
           placeholder="Filter by price"
-          className="m-2"
+          className="input input-bordered input-primary w-1/8 max-w-xs m-1"
           value={filters.price}
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, price: e.target.value }))
