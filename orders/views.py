@@ -8,6 +8,8 @@ from users.permissions import IsClient
 
 from .models import Order
 from .serializers import OrderSerializer
+from .tasks import send_payment_reminder
+from .utils import get_countdown
 
 
 class OrderViewSet(ModelViewSet):
@@ -39,3 +41,5 @@ class OrderViewSet(ModelViewSet):
         recipient_list = [customer_email]
 
         send_mail(subject, message, from_email, recipient_list)
+        countdown = get_countdown(order.payment_due_date)
+        send_payment_reminder.apply_async((order.id,), countdown=countdown)

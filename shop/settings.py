@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg",
     "corsheaders",
+    "django_celery_beat",
     "categories.apps.CategoriesConfig",
     "orders.apps.OrdersConfig",
     "products.apps.ProductsConfig",
@@ -129,7 +130,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "users.CustomUser"
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 SIMPLE_JWT = {
@@ -178,7 +186,7 @@ SWAGGER_SETTINGS = {
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Warsaw"
 
 USE_I18N = True
 
@@ -203,3 +211,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # lub inny broker jak RabbitMQ
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
+# Django-celery-beat settings
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

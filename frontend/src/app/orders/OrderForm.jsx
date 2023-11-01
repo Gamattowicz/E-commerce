@@ -19,6 +19,7 @@ export default function OrderForm() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [totalPrice, setTotalPrice] = useState("");
   const [paymentTerm, setPaymentTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddProduct = () => {
     if (product && quantity > 0) {
@@ -30,7 +31,7 @@ export default function OrderForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     const orderData = {
       customer_name: customerName,
       delivery_address: {
@@ -64,6 +65,8 @@ export default function OrderForm() {
       setOrderPlaced(true);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,7 +97,11 @@ export default function OrderForm() {
   }, [router, userInfo]);
   return (
     <React.Fragment>
-      {!orderPlaced ? (
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : orderPlaced ? (
+        <OrderResult totalPrice={totalPrice} paymentTerm={paymentTerm} />
+      ) : (
         <form
           onSubmit={handleSubmit}
           className="bg-neutral p-8 rounded-lg shadow-md w-96"
@@ -239,8 +246,6 @@ export default function OrderForm() {
             </button>
           </div>
         </form>
-      ) : (
-        <OrderResult totalPrice={totalPrice} paymentTerm={paymentTerm} />
       )}
     </React.Fragment>
   );
