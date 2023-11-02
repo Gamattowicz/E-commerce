@@ -1,11 +1,13 @@
 import "./globals.css";
-import { Raleway } from "next/font/google";
+import { Roboto_Slab } from "next/font/google";
 
 import Footer from "./components/footer";
 import Header from "./components/header";
 import { UserProvider } from "./userContext";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const roboto_slab = Roboto_Slab({
+  subsets: ["latin"],
+});
 
 export const metadata = {
   title: "E-commerce",
@@ -17,10 +19,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="business">
+    <html lang="en" data-theme="night">
       <UserProvider>
-        <body className={raleway.className}>
-          <div className="flex flex-col min-h-screen">
+        <body className={roboto_slab.className}>
+          <div className="flex flex-col min-h-screen max-h-full">
             <Header />
             <main className="flex-1 grid place-items-center">{children}</main>
             <Footer />

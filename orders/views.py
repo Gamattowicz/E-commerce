@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework import status
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 
 from users.permissions import IsClient
 
@@ -12,7 +12,7 @@ from .tasks import send_payment_reminder
 from .utils import get_countdown
 
 
-class OrderViewSet(ModelViewSet):
+class OrderCreateView(CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsClient]

@@ -30,9 +30,6 @@ export default function ProductUpdate() {
         formData.append("image", newImage);
         method = "PUT";
       }
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       const res = await fetch(`http://127.0.0.1:8000/products/${productId}/`, {
         method: method,
@@ -41,7 +38,6 @@ export default function ProductUpdate() {
           Authorization: `Bearer ${userInfo.access}`,
         },
       });
-      console.log(res);
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.detail);
@@ -86,23 +82,74 @@ export default function ProductUpdate() {
     <React.Fragment>
       <form
         onSubmit={handleSubmit}
-        className="bg-neutral p-8 rounded-lg shadow-md w-96"
+        className="bg-neutral p-8 rounded-lg shadow-md w-full"
       >
         <h2 className="text-2xl font-bold mb-4 text-center">Update Product</h2>
 
-        <div className="mb-2">
-          <label className="label">
-            <span className="label-text">Product name</span>
-          </label>
-          <div className="relative">
-            <input
-              id="name"
-              type="text"
-              placeholder="Enter product name"
-              className="input input-bordered input-primary w-full max-w-xs"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+        <div className="flex justify-between mb-2">
+          <div className="w-1/2 pr-2">
+            <label className="label">
+              <span className="label-text">Product name</span>
+            </label>
+            <div className="relative">
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter product name"
+                className="input input-bordered input-primary w-full"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="w-1/2 pl-2">
+            <label className="label">
+              <span className="label-text">Product image</span>
+            </label>
+            <div className="relative">
+              <input
+                id="image"
+                type="file"
+                placeholder="Enter product image"
+                className="file-input file-input-bordered file-input-primary w-full"
+                onChange={(e) => setNewImage(e.target.files[0])}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between mb-2">
+          <div className="w-1/2 pr-2">
+            <label className="label">
+              <span className="label-text">Product price</span>
+            </label>
+            <div className="relative">
+              <input
+                id="price"
+                type="number"
+                step="0.01"
+                min="1"
+                placeholder="Enter product price"
+                className="input input-bordered input-primary w-full"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="w-1/2 pl-2">
+            <label className="label">
+              <span className="label-text">Product category</span>
+            </label>
+            <div className="relative">
+              <input
+                id="category"
+                type="text"
+                placeholder="Enter product category"
+                className="input input-bordered input-primary w-full"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
           </div>
         </div>
 
@@ -115,64 +162,15 @@ export default function ProductUpdate() {
               id="description"
               type="text"
               placeholder="Enter product description"
-              className="textarea textarea-primary w-full max-w-xs"
+              className="textarea textarea-primary w-full"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         </div>
 
-        <div className="mb-2">
-          <label className="label">
-            <span className="label-text">Product price</span>
-          </label>
-          <div className="relative">
-            <input
-              id="price"
-              type="number"
-              step="0.01"
-              min="1"
-              placeholder="Enter product price"
-              className="input input-bordered input-primary w-full max-w-xs"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="mb-2">
-          <label className="label">
-            <span className="label-text">Product category</span>
-          </label>
-          <div className="relative">
-            <input
-              id="category"
-              type="text"
-              placeholder="Enter product category"
-              className="input input-bordered input-primary w-full max-w-xs"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="mb-2">
-          <label className="label">
-            <span className="label-text">Product image</span>
-          </label>
-          <div className="relative">
-            <input
-              id="image"
-              type="file"
-              placeholder="Enter product image"
-              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-              onChange={(e) => setNewImage(e.target.files[0])}
-            />
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <button type="submit" className="btn btn-primary w-full p-1">
+        <div className="mt-4 flex justify-center">
+          <button type="submit" className="btn btn-primary w-1/4 p-1">
             Update product
           </button>
         </div>

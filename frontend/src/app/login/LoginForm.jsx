@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "../userContext";
+import Message from "../components/Message";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isClient, setIsClient] = useState(false);
   const { userInfo, setUserInfo } = useUser();
+  const [error, setError] = useState(null);
 
   const router = useRouter();
 
@@ -31,7 +33,8 @@ export default function LoginForm() {
       setUserInfo(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
-      console.error("Error fetching products:", error);
+      setError(error.message);
+      console.error("Error fetching products:", error.message);
     }
     if (userInfo) {
       router.push("/products");
@@ -52,6 +55,7 @@ export default function LoginForm() {
           className="bg-neutral p-8 rounded-lg shadow-md w-96"
         >
           <h2 className="text-2xl font-bold mb-4 text-center">LOGIN</h2>
+          {error && <Message variant="error">{error}</Message>}
 
           <div className="mb-2">
             <label className="label">

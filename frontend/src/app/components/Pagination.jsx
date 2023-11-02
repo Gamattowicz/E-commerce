@@ -10,7 +10,7 @@ export default function Pagination({
       {Array.from({ length: pageNumbers }).map((_, index) => (
         <button
           key={index}
-          className={`join-item btn ${
+          className={`join-item btn btn-primary ${
             index + 1 === currentPage ? "btn-active" : ""
           }`}
           onClick={() => handlePageChange(index + 1)}

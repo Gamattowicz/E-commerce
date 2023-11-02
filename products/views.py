@@ -122,7 +122,7 @@ class MostOrderedProductsView(APIView):
 
         top_products = (
             OrderItem.objects.filter(order__in=filtered_orders)
-            .values("product__name")
+            .values("product__name", "product_id")
             .annotate(total_ordered=Sum("quantity"))
             .order_by("-total_ordered")[:product_count]
         )

@@ -20,8 +20,6 @@ export default function ProductDetail({ productId }) {
         console.error("Error fetching products:", error);
       }
     }
-    console.log(product);
-    console.log(product.image);
     fetchData();
   }, [productId, router, isClient]);
   return (

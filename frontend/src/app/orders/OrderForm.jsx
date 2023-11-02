@@ -59,7 +59,6 @@ export default function OrderForm() {
         throw new Error(errorData.detail);
       }
       const data = await res.json();
-      console.log(data);
       setTotalPrice(data.total_price);
       setPaymentTerm(data.payment_due_date);
       setOrderPlaced(true);
@@ -88,7 +87,6 @@ export default function OrderForm() {
   }
 
   useEffect(() => {
-    console.log(userInfo);
     if (userInfo && userInfo.user_type !== 1) {
       router.push("/products");
     } else {
@@ -98,7 +96,12 @@ export default function OrderForm() {
   return (
     <React.Fragment>
       {isLoading ? (
-        <div>Loading...</div>
+        <>
+          <span className="loading loading-ball loading-xs text-primary"></span>
+          <span className="loading loading-ball loading-sm text-primary"></span>
+          <span className="loading loading-ball loading-md text-primary"></span>
+          <span className="loading loading-ball loading-lg text-primary"></span>
+        </>
       ) : orderPlaced ? (
         <OrderResult totalPrice={totalPrice} paymentTerm={paymentTerm} />
       ) : (

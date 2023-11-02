@@ -7,7 +7,7 @@ import { useUser } from "../userContext";
 export default function TopProducts() {
   const [products, setProducts] = useState([]);
   const [startDate, setStartDate] = useState("2023-01-01");
-  const [endDate, setEndDate] = useState("2023-10-31");
+  const [endDate, setEndDate] = useState("2023-11-30");
   const [productCount, setProductCount] = useState(3);
   const [isClient, setIsClient] = useState(false);
   const { userInfo, setUserInfo } = useUser();
@@ -58,7 +58,7 @@ export default function TopProducts() {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="border p-1 rounded"
+            className="border p-1 rounded input input-bordered input-primary"
           />
         </div>
         <div>
@@ -67,7 +67,7 @@ export default function TopProducts() {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="border p-1 rounded"
+            className="border p-1 rounded input input-bordered input-primary "
           />
         </div>
         <div>
@@ -77,13 +77,13 @@ export default function TopProducts() {
             value={productCount}
             onChange={(e) => setProductCount(e.target.value)}
             min="1"
-            className="border p-1 rounded"
+            className="border p-1 rounded input input-bordered input-primary"
           />
         </div>
 
         <button
           onClick={fetchTopProduct}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="btn btn-primary font-bold py-2 px-4 rounded"
         >
           Search
         </button>

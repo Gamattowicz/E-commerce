@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import Product from "../components/Product";
 import Pagination from "../components/Pagination";
 import { useUser } from "../userContext";
+import Message from "../components/Message";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const { userInfo, setUserInfo } = useUser();
   const [productNumbers, setProductNumbers] = useState(0);
   const [page, setPage] = useState(1);
-  const [productOnPage, setProductOnPage] = useState(3);
+  const [productOnPage, setProductOnPage] = useState(6);
   const [sortField, setSortField] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
   const [filters, setFilters] = useState({
@@ -19,6 +20,7 @@ export default function ProductList() {
     description: "",
     price: "",
   });
+  const [error, setError] = useState(null);
 
   const router = useRouter();
   async function fetchProduct() {
@@ -38,7 +40,8 @@ export default function ProductList() {
       setProducts(data.results);
       setProductNumbers(data.count);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      setError(error.message);
+      console.error("Error fetching products:", error.message);
     }
   }
 
@@ -61,6 +64,7 @@ export default function ProductList() {
 
   return (
     <React.Fragment>
+      {error && <Message variant="error">{error}</Message>}
       {userInfo && userInfo.user_type === 2 && (
         <div className="flex justify-center items-center mb-4">
           <button
@@ -75,7 +79,7 @@ export default function ProductList() {
 
       <div className="flex justify-center items-center mb-4 flex-wrap">
         <select
-          className="select select-info w-1/8 max-w-xs m-1"
+          className="select select-warning w-1/8 max-w-xs m-1"
           value={sortField}
           onChange={(e) => setSortField(e.target.value)}
         >
@@ -88,7 +92,7 @@ export default function ProductList() {
         </select>
 
         <select
-          className="select select-info w-1/8 max-w-xs m-1"
+          className="select select-warning w-1/8 max-w-xs m-1"
           value={sortDirection}
           onChange={(e) => setSortDirection(e.target.value)}
         >
@@ -133,20 +137,21 @@ export default function ProductList() {
         />
       </div>
       <div className="flex flex-wrap justify-between items-center">
-        {products.length <= 0 && (
+        {products && products.length <= 0 && (
           <div>
             <p className="font-bold text-center text-primary text-2xl">
               No product
             </p>
           </div>
         )}
-        {products.map((product) => (
-          <Product
-            key={product.id}
-            product={product}
-            onProductDelete={refreshProducts}
-          />
-        ))}
+        {products &&
+          products.map((product) => (
+            <Product
+              key={product.id}
+              product={product}
+              onProductDelete={refreshProducts}
+            />
+          ))}
       </div>
       <div className="flex justify-center items-center mb-4">
         <Pagination
