@@ -1,7 +1,7 @@
 <div align="center">
 <h1 align="center">E-Commerce</h1></div>
 
-![e_commerce_thumbnail.PNG](readme/e_commerce_thumbnail.PNG)
+![e_commerce_thumbnail.PNG](readme/e_commerce_thumbnail.png)
 
 ## Table of contents
 
