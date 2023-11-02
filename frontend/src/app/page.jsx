@@ -4,8 +4,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="h-3/4 screen flex w-4/5">
-      {/* Lewa strona */}
-
       <div className="w-3/5 flex flex-col justify-between p-10 m-4">
         <div className="flex flex-col items-start">
           <span className="text-2xl font-black uppercase italic tracking-wide mb-1">
@@ -41,7 +39,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Prawa strona - miejsce na screen */}
       <div className="w-2/5 bg-gray-200">
         <Image
           src="/Alfa_Romeo_Giulia_2.png"

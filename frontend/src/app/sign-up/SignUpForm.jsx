@@ -72,10 +72,7 @@ export default function SignUpForm() {
           {error && <Message variant="error">{error}</Message>}
 
           <div className="flex mb-2">
-            {" "}
-            {/* linia 1 */}
             <div className="flex-1 mr-2">
-              {/* username input */}
               <label className="label">
                 <span className="label-text">Username</span>
               </label>
@@ -89,7 +86,6 @@ export default function SignUpForm() {
               />
             </div>
             <div className="flex-1">
-              {/* email input */}
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
@@ -105,10 +101,7 @@ export default function SignUpForm() {
           </div>
 
           <div className="flex mb-2">
-            {" "}
-            {/* linia 2 */}
             <div className="flex-1 mr-2">
-              {/* password input */}
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
@@ -122,7 +115,6 @@ export default function SignUpForm() {
               />
             </div>
             <div className="flex-1">
-              {/* confirm password input */}
               <label className="label">
                 <span className="label-text">Confirm Password</span>
               </label>

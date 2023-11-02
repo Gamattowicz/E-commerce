@@ -33,7 +33,7 @@ export default function ProductCreate() {
         method: "POST",
         body: formData,
         headers: {
-          Authorization: `Bearer ${userInfo.access}`,
+          Authorization: `Bearer ${userInfo.token}`,
         },
       });
       if (!res.ok) {

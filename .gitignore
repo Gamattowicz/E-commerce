@@ -161,6 +161,3 @@ cython_debug/
 
 # Visual Studio Code
 .vscode
-
-# Static files
-static
