@@ -39,9 +39,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-2/5 bg-gray-200">
+      <div className="w-2/5 flex justify-center items-center">
         <Image
-          src="/Alfa_Romeo_Giulia_2.png"
+          src="/e_commerce_thumbnail.png"
           alt="alfa"
           width={200}
           height={200}
