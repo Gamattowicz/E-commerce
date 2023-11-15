@@ -5,15 +5,13 @@ from django.core.files.base import ContentFile
 from django.db import models
 from PIL import Image
 
-from categories.models import Category
-
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="products"
+        "categories.Category", on_delete=models.PROTECT, related_name="products"
     )
     image = models.ImageField(upload_to="")
     thumbnail = models.ImageField(upload_to="thumbnails/", null=True, blank=True)

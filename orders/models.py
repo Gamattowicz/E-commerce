@@ -17,23 +17,24 @@ class DeliveryAddress(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(
         CustomUser,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="orders",
         null=True,
         blank=True,
     )
     customer_name = models.CharField(max_length=255)
-    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
+    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.PROTECT)
     order_date = models.DateTimeField(auto_now_add=True)
     payment_due_date = models.DateTimeField(blank=True, null=True)
     products = models.ManyToManyField(Product, through="OrderItem")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-    @property
-    def total_price(self):
-        total = sum(
-            item.product.price * item.quantity for item in self.order_items.all()
-        )
-        return total
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.total_price = sum(
+                item.product.price * item.quantity for item in self.order_items.all()
+            )
+        super().save(*args, **kwargs)
 
     def __str__(self):
         products_info = ", ".join(
@@ -44,9 +45,9 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
-        Order, related_name="order_items", on_delete=models.CASCADE
+        "orders.Order", related_name="order_items", on_delete=models.CASCADE
     )
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey("products.Product", on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
