@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 
+from django.db import transaction
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
@@ -65,6 +67,7 @@ class ProductViewSet(ModelViewSet):
         operation_description="Delete a product.",
         responses={204: "Product successfully deleted"},
     )
+    @transaction.atomic
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
@@ -110,7 +113,23 @@ class MostOrderedProductsView(APIView):
     def get(self, request, *args, **kwargs):
         date_from = request.query_params.get("date_from")
         date_to = request.query_params.get("date_to")
-        product_count = int(request.query_params.get("product_count", 10))
+        product_count = request.query_params.get("product_count", "10")
+
+        try:
+            if date_from:
+                datetime.strptime(date_from, "%Y-%m-%d")
+            if date_to:
+                date_to_obj = datetime.strptime(date_to, "%Y-%m-%d").date()
+                next_day = date_to_obj + timedelta(days=1)
+        except ValueError:
+            raise ValidationError("Invalid date format. Use YYYY-MM-DD.")
+
+        try:
+            product_count = int(product_count)
+            if product_count < 0:
+                raise ValidationError("product_count must be a non-negative integer.")
+        except ValueError:
+            raise ValidationError("product_count must be an integer.")
 
         filtered_orders = Order.objects.all()
         if date_from:
