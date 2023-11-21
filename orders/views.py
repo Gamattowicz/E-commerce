@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import transaction
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -17,10 +18,14 @@ class OrderCreateView(CreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsClient]
 
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
+        with transaction.atomic():
+            self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
 
         response_data = {
@@ -31,8 +36,8 @@ class OrderCreateView(CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        order = serializer.save(customer=self.request.user)
-
+        with transaction.atomic():
+            order = serializer.save(customer=self.request.user)
         customer_email = order.customer.email
 
         subject = "Order confirmation"

@@ -32,33 +32,22 @@ class ProductSerializer(serializers.ModelSerializer):
         return representation
 
     def create(self, validated_data):
-        category_name = validated_data.pop("category")["name"]
-        category, _ = Category.objects.get_or_create(name=category_name)
-        product = Product.objects.create(category=category, **validated_data)
-        return product
+        return self._create_or_update_instance(validated_data)
 
     def update(self, instance, validated_data):
-        print("Updating with data:", validated_data)
+        return self._create_or_update_instance(validated_data, instance)
+
+    def _create_or_update_instance(self, validated_data, instance=None):
         category_name = validated_data.pop("category")["name"]
         category, _ = Category.objects.get_or_create(name=category_name)
 
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+        if instance is None:
+            product = Product.objects.create(category=category, **validated_data)
+            return product
+        else:
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-        instance.category = category
-        instance.save()
-
-        return instance
-
-    def partial_update(self, instance, validated_data):
-        print("Updating with data:", validated_data)
-        category_name = validated_data.pop("category")["name"]
-        category, _ = Category.objects.get_or_create(name=category_name)
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        instance.category = category
-        instance.save()
-
-        return instance
+            instance.category = category
+            instance.save()
+            return instance

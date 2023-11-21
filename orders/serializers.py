@@ -41,7 +41,9 @@ class OrderSerializer(serializers.ModelSerializer):
             delivery_address=delivery_address, **validated_data
         )
 
-        for order_item_data in order_items_data:
-            OrderItem.objects.create(order=order, **order_item_data)
+        order_item_instances = [
+            OrderItem(order=order, **item_data) for item_data in order_items_data
+        ]
+        OrderItem.objects.bulk_create(order_item_instances)
 
         return order

@@ -86,10 +86,6 @@ EMAIL_HOST_PASSWORD = email_host_password
 Create your database
 
 ```bash
-python manage.py makemigrations
-```
-
-```bash
 python manage.py migrate
 ```
 
